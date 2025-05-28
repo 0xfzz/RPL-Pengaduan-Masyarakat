@@ -1,0 +1,41 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+.leftSide {
+  flex: 1;
+  background: url("/images/bg_masyarakat.jpg") no-repeat center center;
+  background-size: cover;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.brandText {
+  position: relative;
+  z-index: 10;
+  color: white;
+  text-align: center;
+  padding: 1.5rem;
+  border-radius: 12px;
+}
+
+.brandText h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.brandText p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  opacity: 0.9;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

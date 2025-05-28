@@ -1,0 +1,107 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+.rightSide {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+  position: relative;
+  padding: 2rem 1rem;
+}
+
+.loginForm {
+  width: 100%;
+  max-width: 450px;
+  padding: 2.5rem 2rem;
+  background: white;
+  border: 1px solid rgba(30, 58, 138, 0.1);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  position: relative;
+  z-index: 10;
+}
+
+.loginForm h2 {
+  color: #1e3a8a;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: #4b5563;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+}
+
+.inputGroup {
+  position: relative;
+  margin-bottom: 1.2rem;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(30, 58, 138, 0.2);
+  border-radius: 12px;
+  color: #1e3a8a;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.inputGroup input:focus {
+  outline: none;
+  border-color: #1e3a8a;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+}
+
+.error input {
+  border-color: #ef4444;
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.errorMessage {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+}
+
+.loginButton {
+  width: 100%;
+  padding: 1rem 1.25rem;
+  background: #1e3a8a;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 1.5rem 0;
+}
+
+.loginButton:hover {
+  background: #1e40af;
+}
+
+.registerLink {
+  text-align: center;
+  color: #4b5563;
+  font-size: 0.95rem;
+}
+
+.registerLink a {
+  color: #1e3a8a;
+  text-decoration: none;
+  font-weight: 500;
+}
