@@ -1,0 +1,94 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum RolePengguna {
+  masyarakat
+  admin
+  petugas
+}
+
+enum KategoriAduan {
+  infrastruktur
+  lingkungan
+  sosial
+  keamanan
+  pelayanan_publik
+  lainnya
+}
+
+enum NilaiStatusAduan {
+  Diajukan
+  Diverifikasi
+  Diproses
+  Ditindaklanjuti
+  Selesai
+  Ditolak
+}
+
+model pengguna {
+  id_pengguna    Int          @id @default(autoincrement())
+  nik            String?      @unique @db.VarChar(16)
+  nama_lengkap   String       @db.VarChar(255)
+  password       String       @db.VarChar(255)
+  email          String?      @unique @db.VarChar(255)
+  nomor_telepon  String?      @db.VarChar(20)
+  role           RolePengguna
+  alamat         String?
+  verified       Boolean      @default(false)
+  created_at     DateTime     @default(now())
+  updated_at     DateTime     @default(now())
+  aduan_pelapor  aduan[]      @relation("Pelapor")
+  aduan_petugas  aduan[]      @relation("Petugas")
+}
+
+model aduan {
+  id_aduan         Int              @id @default(autoincrement())
+  id_pelapor       Int
+  id_petugas       Int?
+  judul_aduan      String           @db.VarChar(255)
+  deskripsi_aduan  String
+  kategori_aduan   KategoriAduan?
+  tanggal_aduan    DateTime         @default(now())
+  alamat_aduan     String
+  status_terkini   NilaiStatusAduan @default(Diajukan)
+  created_at       DateTime         @default(now())
+  updated_at       DateTime         @default(now())
+  pelapor          pengguna         @relation("Pelapor", fields: [id_pelapor], references: [id_pengguna])
+  petugas          pengguna?        @relation("Petugas", fields: [id_petugas], references: [id_pengguna])
+  status_aduan     status_aduan[]
+  lampiran_aduan   lampiran[]       @relation("LampiranAduan")
+}
+
+model status_aduan {
+  id_status_aduan  Int              @id @default(autoincrement())
+  id_aduan         Int
+  status           NilaiStatusAduan
+  keterangan       String?
+  tanggal_status   DateTime         @default(now())
+  created_at       DateTime         @default(now())
+  aduan            aduan            @relation(fields: [id_aduan], references: [id_aduan])
+  lampiran_status  lampiran[]       @relation("LampiranStatus")
+}
+
+model lampiran {
+  id_lampiran      Int              @id @default(autoincrement())
+  id_aduan         Int?
+  id_status_aduan  Int?
+  file_path        String           @db.VarChar(255)
+  created_at       DateTime         @default(now())
+  aduan            aduan?           @relation("LampiranAduan", fields: [id_aduan], references: [id_aduan])
+  status_aduan     status_aduan?    @relation("LampiranStatus", fields: [id_status_aduan], references: [id_status_aduan])
+}
