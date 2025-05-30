@@ -25,6 +25,7 @@ const handler = async (req: any, res: NextApiResponse) => {
       // Admin can see all aduan
       aduanList = await prisma.aduan.findMany({
         select: {
+            id_aduan: true,
             judul_aduan: true,
             kategori_aduan: true,
             petugas: {
@@ -50,6 +51,7 @@ const handler = async (req: any, res: NextApiResponse) => {
           id_pelapor: userId,
         },
         select: {
+            id_aduan: true,
             judul_aduan: true,
             kategori_aduan: true,
             petugas: {
@@ -75,6 +77,7 @@ const handler = async (req: any, res: NextApiResponse) => {
           id_petugas: userId,
         },
         select: {
+            id_aduan: true,
             judul_aduan: true,
             kategori_aduan: true,
             petugas: {
@@ -99,6 +102,7 @@ const handler = async (req: any, res: NextApiResponse) => {
 
     // Format the response to include only the latest status
     const formattedAduanList = aduanList.map((aduan) => ({
+      id_aduan: aduan.id_aduan,
       judul_aduan: aduan.judul_aduan,
       kategori_aduan: aduan.kategori_aduan,
       alamat_aduan: aduan.alamat_aduan,

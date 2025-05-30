@@ -53,6 +53,9 @@ const handler = async (req: any, res: NextApiResponse) => {
               tanggal_status: true,
               lampiran_status: true
             },
+            orderBy: {
+              tanggal_status: 'desc',
+            }
           },
           lampiran_aduan: {
             select: {
@@ -89,6 +92,9 @@ const handler = async (req: any, res: NextApiResponse) => {
               tanggal_status: true,
               lampiran_status: true
             },
+            orderBy: {
+              tanggal_status: 'desc',
+            }
           },
           lampiran_aduan: {
             select: {
@@ -125,6 +131,9 @@ const handler = async (req: any, res: NextApiResponse) => {
               tanggal_status: true,
               lampiran_status: true
             },
+            orderBy: {
+              tanggal_status: 'desc',
+            }
           },
           lampiran_aduan: {
             select: {

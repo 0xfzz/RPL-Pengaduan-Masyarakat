@@ -74,6 +74,13 @@ const handler = async (req: any, res: NextApiResponse) => {
       },
     });
 
+    await prisma.aduan.update({
+      where: { id_aduan: parseInt(id_aduan) },
+      data: {
+        status_terkini: status
+      }
+    });
+
     // If lampiran is provided, add it to the lampiran table
     const uploadedFiles = req.files.map((file: any) => `/uploads/${file.filename}`);
     if (uploadedFiles.length > 0) {
