@@ -76,10 +76,10 @@ const Login: React.FC = () => {
               />
             </div>
             <CardTitle className="text-2xl font-semibold text-center text-blue-800">
-              Login
+              Masuk
             </CardTitle>
             <p className="text-sm text-center text-gray-600">
-              Enter your credentials
+              Masukkan email dan password Anda untuk masuk ke akun Anda.
             </p>
           </CardHeader>
           
