@@ -4,10 +4,7 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import { runMiddleware } from "../../../utils/runMiddleware"; // Utility to run middleware
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/utils/nextAuthOptions";
 import { onlyFor } from "@/utils/onlyFor";
-import { headers } from "next/headers";
 
 // Configure multer for file uploads
 const upload = multer({
@@ -29,7 +26,7 @@ const uploadMiddleware = upload.array("lampiran");
 
 // API handler
 const handler = async (req: any, res: NextApiResponse) => {
-  const userId = parseInt(req.headers['x-user-id'] || '');
+  
   const prisma = new PrismaClient();
   
   
@@ -40,6 +37,7 @@ const handler = async (req: any, res: NextApiResponse) => {
   if(checked.error != null){
     return res.status(checked.status).json({ error: checked.error });
   }
+  const userId = checked.decoded.id; // Get user ID from the decoded token
   await runMiddleware(req, res, uploadMiddleware);
   const { judul_aduan, deskripsi_aduan, kategori_aduan, alamat_aduan } = req.body;
   console.log(judul_aduan, deskripsi_aduan, kategori_aduan, alamat_aduan)

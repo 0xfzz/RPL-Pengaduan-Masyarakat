@@ -27,8 +27,6 @@ export async function middleware(req: RequestWithUser) {
         if (!decoded) {
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }
-        response.headers.set('x-user-role', decoded.role);
-        response.headers.set('x-user-id', String(decoded.id));
     }
     
     return response;

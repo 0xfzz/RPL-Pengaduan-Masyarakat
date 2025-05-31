@@ -2,7 +2,7 @@
 import React, { useLayoutEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { FaHome, FaClipboardList } from "react-icons/fa";
+import { FaHome, FaClipboardList, FaUsers, FaUser } from "react-icons/fa";
 import styles from "./SidebarDashboard.module.css";
 import { useAuthStore } from "@/store/authStore";
 import toast from 'react-hot-toast';
@@ -15,7 +15,7 @@ const SidebarDashboard: React.FC = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [isValidating, setIsValidating] = useState(true);
-  const [hasValidated, setHasValidated] = useState(false); // Add this flag
+  const [hasValidated, setHasValidated] = useState(false);
 
   // Memoize the validation function to prevent recreating it on every render
   const validateToken = useCallback(async () => {
@@ -84,11 +84,11 @@ const SidebarDashboard: React.FC = () => {
         router.push("/auth/login");
       }, 2000);
     }
-  }, [hasValidated, clearToken, router]); // Add dependencies
+  }, [hasValidated, clearToken, router]);
 
   useLayoutEffect(() => {
     validateToken();
-  }, []); // Keep empty dependency array since validateToken is memoized
+  }, []);
 
   // Show loading state while validating
   if (isValidating) {
@@ -115,14 +115,24 @@ const SidebarDashboard: React.FC = () => {
           href="/dashboard" 
           className={`${styles.navItem} ${pathname === "/dashboard" ? styles.active : ""}`}
         >
-          <FaHome className="mr-2" /> Home
+          <FaHome className="mr-2" /> Dashboard
         </Link>
+        
         <Link 
           href="/dashboard/list-aduan" 
           className={`${styles.navItem} ${pathname === "/dashboard/list-aduan" ? styles.active : ""}`}
         >
-          <FaClipboardList className="mr-2" /> {userRole === "masyarakat" ? "Pengaduan Saya" : "List Pengaduan"}
+          <FaClipboardList className="mr-2" /> 
+          {userRole === "masyarakat" ? "Pengaduan Saya" : "List Pengaduan"}
         </Link>
+      {userRole === "admin" ? (
+        <Link 
+          href="/dashboard/list-user" 
+          className={`${styles.navItem} ${pathname === "/dashboard/list-user" ? styles.active : ""}`}
+        >
+          <FaUsers className="mr-2" />  Manajemen User
+        </Link>
+      ) : ""}
       </nav>
     </div>
   );

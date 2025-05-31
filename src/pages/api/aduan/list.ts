@@ -15,8 +15,8 @@ const handler = async (req: any, res: NextApiResponse) => {
     return res.status(checked.status).json({ error: checked.error });
   }
 
-  const userId = parseInt(req.headers["x-user-id"] || "");
-  const userRole = req.headers["x-user-role"];
+  const userId = checked.decoded.id; // Get user ID from the decoded token
+  const userRole = checked.decoded.role; // Get user role from the decoded token
 
   try {
     let aduanList;
@@ -28,6 +28,7 @@ const handler = async (req: any, res: NextApiResponse) => {
             id_aduan: true,
             judul_aduan: true,
             kategori_aduan: true,
+            tanggal_aduan: true,
             petugas: {
               select: {
                 nama_lengkap: true,
@@ -54,6 +55,7 @@ const handler = async (req: any, res: NextApiResponse) => {
             id_aduan: true,
             judul_aduan: true,
             kategori_aduan: true,
+            tanggal_aduan: true,
             petugas: {
               select: {
                 nama_lengkap: true,
@@ -80,6 +82,7 @@ const handler = async (req: any, res: NextApiResponse) => {
             id_aduan: true,
             judul_aduan: true,
             kategori_aduan: true,
+            tanggal_aduan: true,
             petugas: {
               select: {
                 nama_lengkap: true,
@@ -107,7 +110,7 @@ const handler = async (req: any, res: NextApiResponse) => {
       kategori_aduan: aduan.kategori_aduan,
       alamat_aduan: aduan.alamat_aduan,
       status: aduan.status_aduan[aduan.status_aduan.length - 1]?.status || "Unknown",
-      tanggal_status: aduan.status_aduan[aduan.status_aduan.length - 1]?.tanggal_status || null
+      tanggal_aduan: aduan.tanggal_aduan
     }));
 
     return res.status(200).json({ aduan: formattedAduanList });

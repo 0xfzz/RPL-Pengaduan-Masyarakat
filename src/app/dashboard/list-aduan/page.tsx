@@ -29,7 +29,7 @@ interface Aduan {
   kategori_aduan: string;
   alamat_aduan: string;
   status: string;
-  tanggal_status: string | null;
+  tanggal_aduan: string | null;
 }
 
 const ListAduan = () => {
@@ -108,7 +108,7 @@ const ListAduan = () => {
                       <TableHead>Kategori</TableHead>
                       <TableHead>Alamat</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Tanggal Status</TableHead>
+                      <TableHead>Tanggal Aduan Dibuat</TableHead>
                       <TableHead>Aksi</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -151,8 +151,8 @@ const ListAduan = () => {
                           </span>
                         </TableCell>
                         <TableCell>
-                          {aduan.tanggal_status
-                            ? new Date(aduan.tanggal_status).toLocaleDateString(
+                          {aduan.tanggal_aduan
+                            ? new Date(aduan.tanggal_aduan).toLocaleDateString(
                                 "id-ID",
                                 {
                                   day: "2-digit",
@@ -161,7 +161,7 @@ const ListAduan = () => {
                                 }
                               ) +
                               " " +
-                              new Date(aduan.tanggal_status).toLocaleTimeString(
+                              new Date(aduan.tanggal_aduan).toLocaleTimeString(
                                 "id-ID",
                                 {
                                   hour: "2-digit",

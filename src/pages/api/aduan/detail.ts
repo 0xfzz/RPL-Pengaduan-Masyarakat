@@ -15,8 +15,8 @@ const handler = async (req: any, res: NextApiResponse) => {
     return res.status(checked.status).json({ error: checked.error });
   }
 
-  const userId = parseInt(req.headers["x-user-id"] || "");
-  const userRole = req.headers["x-user-role"];
+  const userId = checked.decoded.id; // Get user ID from the decoded token
+  const userRole = checked.decoded.role; // Get user role from the decoded token
   const { id } = req.query; // Get the aduan ID from the query parameters
 
   if (!id) {

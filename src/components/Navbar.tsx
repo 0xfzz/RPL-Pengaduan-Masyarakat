@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "@/store/authStore";
-import { FaUser, FaSignOutAlt, FaCog, FaBell } from "react-icons/fa";
+import { FaSignOutAlt, FaCog, FaBell } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 const Navbar: React.FC = () => {
@@ -20,7 +20,8 @@ const Navbar: React.FC = () => {
   const user = getUser();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-    console.log(user)
+  console.log(user)
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -71,28 +72,16 @@ const Navbar: React.FC = () => {
   return (
     <nav className="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
       <div className="flex justify-between items-center">
-        {/* Left side - Page title or breadcrumb */}
         <div className="flex items-center space-x-4">
-          <h1 className="text-xl font-semibold text-gray-800">
-            Dashboard
-          </h1>
         </div>
 
-        {/* Right side - User info and actions */}
         <div className="flex items-center space-x-4">
-          {/* Notifications */}
-          <Button variant="ghost" size="sm" className="relative">
-            <FaBell className="h-4 w-4" />
-            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full text-xs"></span>
-          </Button>
-
-          {/* User Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-10 w-auto px-3">
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage  alt={user?.nama || "User"} />
+                    <AvatarImage alt={user?.nama || "User"} />
                     <AvatarFallback className="bg-blue-500 text-white text-sm">
                       {user?.nama ? getUserInitials(user.nama) : "U"}
                     </AvatarFallback>
@@ -125,13 +114,6 @@ const Navbar: React.FC = () => {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => router.push("/dashboard/profile")}
-                className="cursor-pointer"
-              >
-                <FaUser className="mr-2 h-4 w-4" />
-                <span>Profile</span>
-              </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => router.push("/dashboard/settings")}
                 className="cursor-pointer"

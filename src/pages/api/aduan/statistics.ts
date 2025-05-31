@@ -6,20 +6,11 @@ const prisma = new PrismaClient();
 
 // Helper function to serialize BigInt values
 const serializeBigInt = (data: any): any => {
-  if (typeof data === 'bigint') {
-    return Number(data);
-  }
-  
-  if (Array.isArray(data)) {
-    return data.map(serializeBigInt);
-  }
-  
-  if (typeof data === 'object' && data !== null) {
-    return Object.fromEntries(
-      Object.entries(data).map(([key, value]) => [key, serializeBigInt(value)])
-    );
-  }
-  
+  const dataRaw = JSON.stringify(data, (key, value) =>
+    typeof value === "bigint" ? Number(value) : value,
+  );
+  data = JSON.parse(dataRaw);
+
   return data;
 };
 
@@ -56,6 +47,7 @@ const handler = async (req: any, res: NextApiResponse) => {
     
     // Convert BigInt to Number
     const dailyCounts = serializeBigInt(dailyCountsRaw);
+    console.log("Raw daily counts:", dailyCounts);
 
     // Get status distribution
     const statusDistribution = await prisma.aduan.groupBy({

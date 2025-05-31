@@ -4,6 +4,13 @@ import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosConfig";
 import { useAuthStore } from "@/store/authStore";
 import Sidebar from "../../../components/Sidebar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 const Login: React.FC = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -12,6 +19,7 @@ const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const setToken = useAuthStore((state) => state.setToken);    
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -58,68 +66,96 @@ const Login: React.FC = () => {
     <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex flex-1 items-center justify-center bg-gray-100 p-4">
-        <form
-          className="w-full max-w-md bg-white border border-gray-200 shadow-lg rounded-lg p-6"
-          onSubmit={handleSubmit}
-        >
-          <img
-            src="/images/LOGO BIRU PNG.png"
-            alt="Logo Portal Masyarakat"
-            className="h-24 mx-auto mb-4"
-          />
-          <h2 className="text-2xl font-semibold text-center text-blue-800 mb-2">Login</h2>
-          <p className="text-sm text-center text-gray-600 mb-6">Enter your credentials</p>
+        <Card className="w-full max-w-md">
+          <CardHeader className="space-y-4">
+            <div className="flex justify-center">
+              <img
+                src="/images/LOGO BIRU PNG.png"
+                alt="Logo Portal Masyarakat"
+                className="h-24"
+              />
+            </div>
+            <CardTitle className="text-2xl font-semibold text-center text-blue-800">
+              Login
+            </CardTitle>
+            <p className="text-sm text-center text-gray-600">
+              Enter your credentials
+            </p>
+          </CardHeader>
+          
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {errorMessage && (
+                <Alert variant="destructive">
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
+              )}
 
-          {errorMessage && (
-            <div className="mb-4 text-red-500 text-sm text-center">{errorMessage}</div>
-          )}
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  placeholder="Masukkan email Anda"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  disabled={loading}
+                  className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
+                  required
+                />
+                {errors.email && (
+                  <p className="text-sm text-red-500">Email harus diisi</p>
+                )}
+              </div>
 
-          <div className={`relative mb-4 ${errors.email ? "border-red-500" : ""}`}>
-            <input
-              type="text"
-              name="email"
-              placeholder="Email"
-              value={formData.email}
-              onChange={handleInputChange}
-              required
-              className={`w-full text-black px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.email ? "border-red-500 ring-red-500" : "border-gray-300 focus:ring-blue-500"
-              }`}
-            />
-            {errors.email && (
-              <div className="text-red-500 text-sm mt-1">Email harus diisi</div>
-            )}
-          </div>
-          <div className={`relative mb-4 ${errors.password ? "border-red-500" : ""}`}>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleInputChange}
-              required
-              className={`w-full text-black px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 ${
-                errors.password ? "border-red-500 ring-red-500" : "border-gray-300 focus:ring-blue-500"
-              }`}
-            />
-            {errors.password && (
-              <div className="text-red-500 text-sm mt-1">Password harus diisi</div>
-            )}
-          </div>
-          <button
-            type="submit"
-            className="w-full py-3 bg-blue-800 text-white font-semibold rounded-lg hover:bg-blue-900 transition duration-300"
-            disabled={loading}
-          >
-            {loading ? "Signing In..." : "Sign In"}
-          </button>
-          <p className="text-center text-sm text-gray-600 mt-4">
-            Belum punya akun?{" "}
-            <a href="/register" className="text-blue-800 hover:text-blue-900">
-              Daftar di sini
-            </a>
-          </p>
-        </form>
+              <div className="space-y-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  placeholder="Masukkan password Anda"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  disabled={loading}
+                  className={errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}
+                  required
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-500">Password harus diisi</p>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                className="w-full bg-blue-800 hover:bg-blue-900 text-white"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing In...
+                  </>
+                ) : (
+                  "Sign In"
+                )}
+              </Button>
+
+              <p className="text-center text-sm text-gray-600">
+                Belum punya akun?{" "}
+                <Link 
+                  href="/auth/register" 
+                  className={`text-blue-800 hover:text-blue-900 transition-colors duration-200 ${
+                    loading ? "pointer-events-none opacity-50" : ""
+                  }`}
+                >
+                  Daftar di sini
+                </Link>
+              </p>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
