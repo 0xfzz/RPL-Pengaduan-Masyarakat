@@ -91,7 +91,7 @@ const ListAduan = () => {
           <Card className="mb-6">
             <CardHeader className="flex items-center justify-between">
               <CardTitle className="text-2xl font-bold text-blue-800">
-                List Pengaduan
+                {userRole === "masyarakat" ? "Pengaduan Saya" : "List Pengaduan"}
               </CardTitle>
               {userRole === "masyarakat" && (
                 <TambahAduanDialog onSuccess={fetchAduan} />

@@ -41,13 +41,8 @@ const SidebarDashboard: React.FC = () => {
         return;
       }
 
-      // Show loading toast for server validation
-      const loadingToast = toast.loading("Validating session...");
-
       // Server-side validation
       const response = await axiosInstance.post("/api/auth/validate", { token });
-      
-      toast.dismiss(loadingToast);
       
       if (response.status === 200) {
         setIsValidating(false);
