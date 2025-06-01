@@ -61,15 +61,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
   },
 
   logout: async () => {
-    try {
-      const loadingToast = toast.loading("Logging out...");
-      await axiosInstance.post("/api/auth/logout");
-      toast.dismiss(loadingToast);
       toast.success("Logged out successfully!");
-    } catch (error) {
-      console.error("Logout API error:", error);
-      toast.error("Logout failed, but you'll be redirected anyway.");
-    } finally {
       localStorage.removeItem("token");
       set({ token: null, user: null });
       
@@ -78,6 +70,5 @@ export const useAuthStore = create<AuthState>((set, get) => ({
           window.location.href = "/auth/login";
         }
       }, 1000);
-    }
   }
 }));
