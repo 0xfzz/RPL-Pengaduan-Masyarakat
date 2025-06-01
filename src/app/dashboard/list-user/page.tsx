@@ -21,7 +21,6 @@ import Navbar from "@/components/Navbar";
 import TambahUserDialog from "@/components/TambahUserDialog";
 import EditUserDialog from "@/components/EditUserDialog";
 import DetailUserDialog from "@/components/DetailUserDialog";
-import { Metadata } from "next";
 
 interface User {
   id_pengguna: number;
@@ -39,10 +38,7 @@ interface User {
     aduan_petugas: number;
   };
 }
-export const metadata: Metadata = {
-  title: "List Pengguna",
-  description: "Halaman untuk melihat daftar pengguna yang terdaftar.",
-};
+
 const ListUser = () => {
   const [userList, setUserList] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
@@ -112,6 +108,7 @@ const ListUser = () => {
   };
 
   useEffect(() => {
+    document.title = "List Pengguna - Dashboard";
     fetchUsers();
   }, []);
 

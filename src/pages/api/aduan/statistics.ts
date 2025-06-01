@@ -47,7 +47,6 @@ const handler = async (req: any, res: NextApiResponse) => {
     
     // Convert BigInt to Number
     const dailyCounts = serializeBigInt(dailyCountsRaw);
-    ;
 
     // Get status distribution
     const statusDistribution = await prisma.aduan.groupBy({

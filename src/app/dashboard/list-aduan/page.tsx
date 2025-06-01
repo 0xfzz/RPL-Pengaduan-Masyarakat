@@ -22,7 +22,6 @@ import AssignPetugasDialog from "@/components/AssignPetugasDialog";
 import DetailAduanDialog from "@/components/DetailAduanDialog";
 import UbahStatusDialog from "@/components/UbahStatusDialog"; // Import the new component
 import Navbar from "@/components/Navbar";
-import { Metadata } from "next";
 
 interface Aduan {
   id_aduan: number;
@@ -32,12 +31,8 @@ interface Aduan {
   status: string;
   tanggal_aduan: string | null;
 }
-export const metadata: Metadata = {
-  title: "List Pengaduan",
-  description: "Halaman untuk melihat daftar pengaduan yang telah diajukan.",
-};
+
 const ListAduan = () => {
-  ;
   const [aduanList, setAduanList] = useState<Aduan[]>([]);
   const { getUser } = useAuthStore();
   const user = getUser();
@@ -83,6 +78,7 @@ const ListAduan = () => {
   };
 
   useEffect(() => {
+    document.title = "List Pengaduan - Dashboard";
     fetchAduan();
   }, []);
 
