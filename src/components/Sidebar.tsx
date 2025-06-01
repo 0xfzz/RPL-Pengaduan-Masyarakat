@@ -32,9 +32,8 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className={styles.leftSide}>
-      <div className={styles.brandText}>
-        <h1>Selamat Datang</h1>
-        <p>Layanan Pengaduan untuk Kemudahan Anda</p>
+      <div className="flex items-center justify-center h-16">
+        <img src="/images/PNG WARNA PUTIH.png" alt="Logo Portal Masyarakat" width="40%" />
       </div>
     </div>
   );

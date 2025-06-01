@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosConfig";
 import { useAuthStore } from "@/store/authStore";
@@ -13,6 +13,9 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const Login: React.FC = () => {
+    useEffect(() => {
+        document.title = "Login - Portal Masyarakat";
+    }, []);
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: false, password: false });
   const [errorMessage, setErrorMessage] = useState("");
@@ -44,12 +47,10 @@ const Login: React.FC = () => {
           password: formData.password,
         });
 
-        const { token, user } = response.data;
+        const { token } = response.data;
 
-        // Store the token and user in the global state
         setToken(token);
 
-        // Redirect to the dashboard
         router.push("/dashboard");
       } catch (error: any) {
         console.error("Error during login:", error);
@@ -86,7 +87,7 @@ const Login: React.FC = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               {errorMessage && (
-                <Alert variant="destructive">
+                <Alert variant="destructive" className="bg-red-50 border-red-200">
                   <AlertDescription>{errorMessage}</AlertDescription>
                 </Alert>
               )}

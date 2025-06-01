@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/utils/axiosConfig";
 import Sidebar from "../../../components/Sidebar";
@@ -11,11 +11,16 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import Link from "next/link";
+import toast from 'react-hot-toast';
 
 const Register: React.FC = () => {
+    useEffect(() => {
+        document.title = "Daftar Akun Baru - Portal Masyarakat";
+    }, []);
     const [formData, setFormData] = useState({
         fullName: "",
         nik: "",
+        email: "",
         phone: "",
         address: "",
         password: "",
@@ -24,6 +29,7 @@ const Register: React.FC = () => {
     const [errors, setErrors] = useState({
         fullName: false,
         nik: false,
+        email: false,
         phone: false,
         address: false,
         password: false,
@@ -43,18 +49,24 @@ const Register: React.FC = () => {
             setFormData({ ...formData, [name]: value });
         }
 
-        setErrors({ ...errors, [name]: !value.trim() });
+        // Clear field error when user starts typing
+        setErrors({ ...errors, [name]: false });
         setErrorMessage("");
+
+        // Real-time password confirmation validation
+        if (name === "confirmPassword") {
+            const passwordMatch = formData.password === value;
+            setErrors(prev => ({ ...prev, confirmPassword: !passwordMatch }));
+        }
+        if (name === "password") {
+            const passwordMatch = formData.confirmPassword === value;
+            setErrors(prev => ({ ...prev, confirmPassword: !passwordMatch && formData.confirmPassword !== "" }));
+        }
     };
 
-    const validatePasswords = () => {
-        const { password, confirmPassword } = formData;
-        if (confirmPassword.trim() !== "") {
-            setErrors({
-                ...errors,
-                confirmPassword: password !== confirmPassword,
-            });
-        }
+    const validateEmail = (email: string) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -63,6 +75,7 @@ const Register: React.FC = () => {
         const newErrors = {
             fullName: !formData.fullName.trim(),
             nik: formData.nik.length !== 16,
+            email: !formData.email.trim() || !validateEmail(formData.email),
             phone: formData.phone.length < 10 || formData.phone.length > 13,
             address: !formData.address.trim(),
             password: formData.password.length < 6,
@@ -77,22 +90,55 @@ const Register: React.FC = () => {
                 const response = await axiosInstance.post("/api/auth/register", {
                     nama_lengkap: formData.fullName,
                     nik: formData.nik,
+                    email: formData.email,
                     nomor_telepon: formData.phone,
                     alamat: formData.address,
                     password: formData.password,
                 });
 
-                // Registration successful
-                alert("Pendaftaran berhasil! Silakan login dengan akun Anda.");
-                router.push("/auth/login");
+                // Registration successful - Show success toast
+                toast.success("🎉 Pendaftaran berhasil! Silakan login dengan akun Anda.", {
+                    duration: 4000,
+                    style: {
+                        background: '#10b981',
+                        color: '#fff',
+                        fontWeight: '500',
+                    },
+                });
+
+                // Add a small delay before redirect to show the toast
+                setTimeout(() => {
+                    router.push("/auth/login");
+                }, 1500);
+
             } catch (error: any) {
                 console.error("Registration error:", error);
-                setErrorMessage(
-                    error.response?.data?.error || "Terjadi kesalahan saat mendaftar. Silakan coba lagi."
-                );
+                
+                // Show error toast
+                const errorMsg = error.response?.data?.error || "Terjadi kesalahan saat mendaftar. Silakan coba lagi.";
+                toast.error(errorMsg, {
+                    duration: 5000,
+                    style: {
+                        background: '#ef4444',
+                        color: '#fff',
+                        fontWeight: '500',
+                    },
+                });
+
+                setErrorMessage(errorMsg);
             } finally {
                 setLoading(false);
             }
+        } else {
+            // Show validation error toast
+            toast.error("Mohon periksa kembali data yang Anda masukkan!", {
+                duration: 3000,
+                style: {
+                    background: '#f59e0b',
+                    color: '#fff',
+                    fontWeight: '500',
+                },
+            });
         }
     };
 
@@ -144,7 +190,7 @@ const Register: React.FC = () => {
                                 )}
                             </div>
 
-                            {/* NIK and Phone Grid */}
+                            {/* NIK and Email Grid */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="nik">NIK</Label>
@@ -166,22 +212,41 @@ const Register: React.FC = () => {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="phone">No. Handphone</Label>
+                                    <Label htmlFor="email">Email</Label>
                                     <Input
-                                        id="phone"
-                                        name="phone"
-                                        type="tel"
-                                        placeholder="No. Handphone"
-                                        value={formData.phone}
+                                        id="email"
+                                        name="email"
+                                        type="email"
+                                        placeholder="email@example.com"
+                                        value={formData.email}
                                         onChange={handleInputChange}
                                         disabled={loading}
-                                        className={errors.phone ? "border-red-500 focus-visible:ring-red-500" : ""}
+                                        className={errors.email ? "border-red-500 focus-visible:ring-red-500" : ""}
                                         required
                                     />
-                                    {errors.phone && (
-                                        <p className="text-sm text-red-500">Nomor handphone tidak valid (10-13 digit)</p>
+                                    {errors.email && (
+                                        <p className="text-sm text-red-500">Email tidak valid</p>
                                     )}
                                 </div>
+                            </div>
+
+                            {/* Phone */}
+                            <div className="space-y-2">
+                                <Label htmlFor="phone">No. Handphone</Label>
+                                <Input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    placeholder="No. Handphone (10-13 digit)"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
+                                    disabled={loading}
+                                    className={errors.phone ? "border-red-500 focus-visible:ring-red-500" : ""}
+                                    required
+                                />
+                                {errors.phone && (
+                                    <p className="text-sm text-red-500">Nomor handphone tidak valid (10-13 digit)</p>
+                                )}
                             </div>
 
                             {/* Address */}
@@ -211,12 +276,9 @@ const Register: React.FC = () => {
                                         id="password"
                                         name="password"
                                         type="password"
-                                        placeholder="Password"
+                                        placeholder="Password (minimal 6 karakter)"
                                         value={formData.password}
-                                        onChange={(e) => {
-                                            handleInputChange(e);
-                                            validatePasswords();
-                                        }}
+                                        onChange={handleInputChange}
                                         disabled={loading}
                                         className={errors.password ? "border-red-500 focus-visible:ring-red-500" : ""}
                                         required
@@ -234,10 +296,7 @@ const Register: React.FC = () => {
                                         type="password"
                                         placeholder="Konfirmasi Password"
                                         value={formData.confirmPassword}
-                                        onChange={(e) => {
-                                            handleInputChange(e);
-                                            validatePasswords();
-                                        }}
+                                        onChange={handleInputChange}
                                         disabled={loading}
                                         className={errors.confirmPassword ? "border-red-500 focus-visible:ring-red-500" : ""}
                                         required

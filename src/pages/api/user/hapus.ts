@@ -15,11 +15,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return res.status(checked.status).json({ error: checked.error });
   }
 
-  const { id_pengguna } = req.body;
+  const { id_pengguna } = req.query;
 
   try {
     // Validate required fields
-    if (!id_pengguna) {
+    if (!id_pengguna || Array.isArray(id_pengguna)) {
       return res.status(400).json({ error: "ID pengguna harus diisi" });
     }
 
@@ -36,14 +36,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(404).json({ error: "Pengguna tidak ditemukan" });
     }
 
-    // Check if user has related complaints
-    const hasComplaints = existingUser.aduan_pelapor.length > 0 || existingUser.aduan_petugas.length > 0;
-    
-    if (hasComplaints) {
-      return res.status(400).json({ 
-        error: "Tidak dapat menghapus pengguna yang memiliki aduan terkait" 
-      });
-    }
 
     // Prevent admin from deleting themselves
     if (checked.decoded!.id === parseInt(id_pengguna)) {

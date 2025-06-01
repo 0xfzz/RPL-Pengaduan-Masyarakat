@@ -14,6 +14,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import axiosInstance from "@/utils/axiosConfig";
 import { useAuthStore } from "@/store/authStore";
 import { FaUserPlus, FaEdit, FaTrash, FaCheck, FaTimes, FaEye } from "react-icons/fa";
@@ -21,6 +29,7 @@ import Navbar from "@/components/Navbar";
 import TambahUserDialog from "@/components/TambahUserDialog";
 import EditUserDialog from "@/components/EditUserDialog";
 import DetailUserDialog from "@/components/DetailUserDialog";
+import toast from 'react-hot-toast';
 
 interface User {
   id_pengguna: number;
@@ -42,6 +51,9 @@ interface User {
 const ListUser = () => {
   const [userList, setUserList] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState<{id: number, name: string} | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const { getUser } = useAuthStore();
   const user = getUser();
   const userRole = user?.role || "";
@@ -53,6 +65,14 @@ const ListUser = () => {
       setUserList(response.data.users || []);
     } catch (error) {
       console.error("Error fetching user list:", error);
+      toast.error("Gagal memuat daftar pengguna", {
+        duration: 4000,
+        style: {
+          background: '#ef4444',
+          color: '#fff',
+          fontWeight: '500',
+        },
+      });
     } finally {
       setLoading(false);
     }
@@ -64,20 +84,77 @@ const ListUser = () => {
         id_pengguna: userId,
         verified: !verified
       });
+      
+      // Show success toast
+      toast.success(
+        `Pengguna berhasil ${!verified ? 'diverifikasi' : 'dibatalkan verifikasinya'}!`,
+        {
+          duration: 3000,
+          style: {
+            background: '#10b981',
+            color: '#fff',
+            fontWeight: '500',
+          },
+        }
+      );
+      
       fetchUsers(); // Refresh the list
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating verification:", error);
+      toast.error(
+        error.response?.data?.error || "Gagal mengubah status verifikasi pengguna",
+        {
+          duration: 4000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+            fontWeight: '500',
+          },
+        }
+      );
     }
   };
 
-  const handleDeleteUser = async (userId: number, userName: string) => {
-    if (window.confirm(`Apakah Anda yakin ingin menghapus pengguna ${userName}?`)) {
-      try {
-        await axiosInstance.delete(`/api/user/hapus?id_pengguna=${userId}`);
-        fetchUsers(); // Refresh the list
-      } catch (error: any) {
-        alert(error.response?.data?.error || "Error deleting user");
-      }
+  const openDeleteDialog = (userId: number, userName: string) => {
+    setUserToDelete({ id: userId, name: userName });
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteUser = async () => {
+    if (!userToDelete) return;
+    
+    setDeleting(true);
+    try {
+      await axiosInstance.delete(`/api/user/hapus?id_pengguna=${userToDelete.id}`);
+      
+      // Show success toast
+      toast.success(`Pengguna ${userToDelete.name} berhasil dihapus!`, {
+        duration: 3000,
+        style: {
+          background: '#10b981',
+          color: '#fff',
+          fontWeight: '500',
+        },
+      });
+      
+      setDeleteDialogOpen(false);
+      setUserToDelete(null);
+      fetchUsers(); // Refresh the list
+    } catch (error: any) {
+      console.error("Error deleting user:", error);
+      toast.error(
+        error.response?.data?.error || "Gagal menghapus pengguna",
+        {
+          duration: 4000,
+          style: {
+            background: '#ef4444',
+            color: '#fff',
+            fontWeight: '500',
+          },
+        }
+      );
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -204,7 +281,7 @@ const ListUser = () => {
                                 <Button
                                   size="sm"
                                   variant="destructive"
-                                  onClick={() => handleDeleteUser(userData.id_pengguna, userData.nama_lengkap)}
+                                  onClick={() => openDeleteDialog(userData.id_pengguna, userData.nama_lengkap)}
                                   className="flex items-center gap-1"
                                 >
                                   <FaTrash className="h-3 w-3" />
@@ -221,6 +298,58 @@ const ListUser = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Delete Confirmation Dialog - Moved outside the map function */}
+          <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle className="text-red-600">
+                  ⚠️ Konfirmasi Penghapusan
+                </DialogTitle>
+                <DialogDescription className="text-gray-600">
+                  Apakah Anda yakin ingin menghapus pengguna{" "}
+                  <span className="font-semibold text-gray-800">
+                    {userToDelete?.name}
+                  </span>
+                  ?
+                  <br />
+                  <span className="text-red-500 font-medium">
+                    Tindakan ini tidak dapat dibatalkan.
+                  </span>
+                </DialogDescription>
+              </DialogHeader>
+              <DialogFooter className="gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setDeleteDialogOpen(false);
+                    setUserToDelete(null);
+                  }}
+                  disabled={deleting}
+                >
+                  Batal
+                </Button>
+                <Button
+                  variant="destructive"
+                  onClick={handleDeleteUser}
+                  disabled={deleting}
+                  className="flex items-center gap-2"
+                >
+                  {deleting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                      Menghapus...
+                    </>
+                  ) : (
+                    <>
+                      <FaTrash className="h-3 w-3" />
+                      Ya, Hapus
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </div>

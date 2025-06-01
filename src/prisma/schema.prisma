@@ -66,8 +66,8 @@ model aduan {
   status_terkini   NilaiStatusAduan @default(Diajukan)
   created_at       DateTime         @default(now())
   updated_at       DateTime         @default(now())
-  pelapor          pengguna         @relation("Pelapor", fields: [id_pelapor], references: [id_pengguna])
-  petugas          pengguna?        @relation("Petugas", fields: [id_petugas], references: [id_pengguna])
+  pelapor          pengguna         @relation("Pelapor", fields: [id_pelapor], references: [id_pengguna], onDelete: Cascade)
+  petugas          pengguna?        @relation("Petugas", fields: [id_petugas], references: [id_pengguna], onDelete: Cascade)
   status_aduan     status_aduan[]
   lampiran_aduan   lampiran[]       @relation("LampiranAduan")
 }
@@ -79,7 +79,7 @@ model status_aduan {
   keterangan       String?
   tanggal_status   DateTime         @default(now())
   created_at       DateTime         @default(now())
-  aduan            aduan            @relation(fields: [id_aduan], references: [id_aduan])
+  aduan            aduan            @relation(fields: [id_aduan], references: [id_aduan], onDelete: Cascade)
   lampiran_status  lampiran[]       @relation("LampiranStatus")
 }
 
@@ -89,6 +89,6 @@ model lampiran {
   id_status_aduan  Int?
   file_path        String           @db.VarChar(255)
   created_at       DateTime         @default(now())
-  aduan            aduan?           @relation("LampiranAduan", fields: [id_aduan], references: [id_aduan])
-  status_aduan     status_aduan?    @relation("LampiranStatus", fields: [id_status_aduan], references: [id_status_aduan])
+  aduan            aduan?           @relation("LampiranAduan", fields: [id_aduan], references: [id_aduan], onDelete: Cascade)
+  status_aduan     status_aduan?    @relation("LampiranStatus", fields: [id_status_aduan], references: [id_status_aduan], onDelete: Cascade)
 }
