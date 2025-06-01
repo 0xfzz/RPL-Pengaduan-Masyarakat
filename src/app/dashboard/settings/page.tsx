@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import axiosInstance from "@/utils/axiosConfig";
 import { useAuthStore } from "@/store/authStore";
 import { FaUser, FaLock, FaCheckCircle, FaTimesCircle, FaSave, FaInfoCircle, FaEdit } from "react-icons/fa";
+import { Metadata } from "next";
 
 interface UserData {
   id_pengguna: number;
@@ -32,7 +33,10 @@ interface UserData {
     aduan_petugas: number;
   };
 }
-
+export const metadata: Metadata = {
+  title: "Pengaturan Akun",
+  description: "Kelola informasi pribadi dan keamanan akun Anda.",
+};
 const SettingsPage = () => {
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);

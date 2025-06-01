@@ -15,7 +15,7 @@ interface RequestWithUser extends NextRequest {
 export async function middleware(req: RequestWithUser) {
     const token = req.headers.get('authorization')?.split(' ')[1];
     const response = NextResponse.next();
-    console.log("Token:", token);
+    ;
     if( !token && req.nextUrl.pathname === '/') {
         return NextResponse.redirect(new URL('/dashboard', req.url));
     }
@@ -25,7 +25,7 @@ export async function middleware(req: RequestWithUser) {
 
     if (token && authenticatedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
         const decoded = await jwt.verify(token);
-        console.log("Verifying token:", decoded);
+        ;
         if (!decoded) {
             return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
         }

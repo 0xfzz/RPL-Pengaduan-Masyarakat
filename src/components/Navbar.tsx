@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
   const user = getUser();
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  console.log(user)
+  
 
   const handleLogout = async () => {
     setIsLoggingOut(true);

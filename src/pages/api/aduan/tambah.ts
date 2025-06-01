@@ -40,7 +40,7 @@ const handler = async (req: any, res: NextApiResponse) => {
   const userId = checked.decoded.id; // Get user ID from the decoded token
   await runMiddleware(req, res, uploadMiddleware);
   const { judul_aduan, deskripsi_aduan, kategori_aduan, alamat_aduan } = req.body;
-  console.log(judul_aduan, deskripsi_aduan, kategori_aduan, alamat_aduan)
+  
 
   if ( !judul_aduan || !deskripsi_aduan || !alamat_aduan) {
     return res.status(400).json({ error: "Missing required fields" });

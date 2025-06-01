@@ -6,7 +6,11 @@ import { useAuthStore } from "@/store/authStore";
 import Navbar from "@/components/Navbar";
 import MasyarakatDashboard from "@/components/MasyarakatDashboard";
 import AdminPetugasDashboard from "@/components/AdminPetugasDashboard";
-
+import { Metadata } from "next";
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Halaman utama dashboard untuk pengguna.",
+};
 const DashboardHome = () => {
   const [loading, setLoading] = useState(true);
   const { getUser } = useAuthStore();
