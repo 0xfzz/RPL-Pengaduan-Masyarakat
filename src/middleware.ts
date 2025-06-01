@@ -16,7 +16,9 @@ export async function middleware(req: RequestWithUser) {
     const token = req.headers.get('authorization')?.split(' ')[1];
     const response = NextResponse.next();
     console.log("Token:", token);
-    
+    if( !token && req.nextUrl.pathname === '/') {
+        return NextResponse.redirect(new URL('/dashboard', req.url));
+    }
     if (!token && authenticatedRoutes.some(route => req.nextUrl.pathname.startsWith(route))) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
@@ -33,7 +35,7 @@ export async function middleware(req: RequestWithUser) {
 }
 
 export const config = {
-    matcher: ['/api/:path*'], // Apply middleware to API routes,
+    matcher: ['/api/:path*', '/'], // Apply middleware to API routes,
     api: {
         bodyParser: false, // Disable body parsing to handle file uploads
       },

@@ -73,9 +73,7 @@ const ListUser = () => {
   const handleDeleteUser = async (userId: number, userName: string) => {
     if (window.confirm(`Apakah Anda yakin ingin menghapus pengguna ${userName}?`)) {
       try {
-        await axiosInstance.delete("/api/user/hapus", {
-          data: { id_pengguna: userId }
-        });
+        await axiosInstance.delete(`/api/user/hapus?id_pengguna=${userId}`);
         fetchUsers(); // Refresh the list
       } catch (error: any) {
         alert(error.response?.data?.error || "Error deleting user");

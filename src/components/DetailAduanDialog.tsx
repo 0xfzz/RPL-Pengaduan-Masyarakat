@@ -12,6 +12,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import axiosInstance from "@/utils/axiosConfig";
 import { FaInfoCircle, FaImage, FaHistory } from "react-icons/fa";
 
@@ -132,6 +133,46 @@ const DetailAduanDialog: React.FC<DetailAduanDialogProps> = ({ aduanId }) => {
     }
   };
 
+  // Get kategori color (matching implementation from list page)
+  const getKategoriColor = (kategori: string) => {
+    switch (kategori) {
+      case "infrastruktur":
+        return "bg-blue-100 text-blue-800";
+      case "lingkungan":
+        return "bg-green-100 text-green-800";
+      case "sosial":
+        return "bg-purple-100 text-purple-800";
+      case "keamanan":
+        return "bg-red-100 text-red-800";
+      case "pelayanan_publik":
+        return "bg-orange-100 text-orange-800";
+      case "lainnya":
+        return "bg-gray-100 text-gray-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
+  // Get kategori display name
+  const getKategoriName = (kategori: string) => {
+    switch (kategori) {
+      case "infrastruktur":
+        return "Infrastruktur";
+      case "lingkungan":
+        return "Lingkungan";
+      case "sosial":
+        return "Sosial";
+      case "keamanan":
+        return "Keamanan";
+      case "pelayanan_publik":
+        return "Pelayanan Publik";
+      case "lainnya":
+        return "Lainnya";
+      default:
+        return kategori;
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -158,6 +199,9 @@ const DetailAduanDialog: React.FC<DetailAduanDialogProps> = ({ aduanId }) => {
                 {aduanDetail.judul_aduan}
               </DialogTitle>
               <div className="flex items-center mt-2 space-x-2">
+                <Badge className={getKategoriColor(aduanDetail.kategori_aduan)}>
+                  {getKategoriName(aduanDetail.kategori_aduan)}
+                </Badge>
                 <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                   aduanDetail.status_terkini === "Diproses"
                     ? "bg-blue-500 text-white"
@@ -192,7 +236,9 @@ const DetailAduanDialog: React.FC<DetailAduanDialogProps> = ({ aduanId }) => {
                 <div className="space-y-4">
                   <div>
                     <h3 className="text-sm font-medium text-gray-500">Kategori</h3>
-                    <p>{aduanDetail.kategori_aduan}</p>
+                    <Badge className={getKategoriColor(aduanDetail.kategori_aduan)}>
+                      {getKategoriName(aduanDetail.kategori_aduan)}
+                    </Badge>
                   </div>
                   
                   <div>

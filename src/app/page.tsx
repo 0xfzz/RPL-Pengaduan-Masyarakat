@@ -1,5 +1,4 @@
-import Sidebar from "@/components/Sidebar";
-import Image from "next/image";
+"use client"
 
 export default function Home() {
   return (
