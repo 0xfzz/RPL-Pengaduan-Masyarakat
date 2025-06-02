@@ -14,9 +14,7 @@ import Link from "next/link";
 import toast from 'react-hot-toast';
 
 const Register: React.FC = () => {
-    useEffect(() => {
-        document.title = "Daftar Akun Baru - Portal Masyarakat";
-    }, []);
+
     const [formData, setFormData] = useState({
         fullName: "",
         nik: "",
@@ -38,7 +36,9 @@ const Register: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const router = useRouter();
-
+    useEffect(() => {
+        document.title = "Daftar Akun Baru - Portal Masyarakat";
+    }, []);
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         

@@ -13,16 +13,16 @@ import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
 const Login: React.FC = () => {
-    useEffect(() => {
-        document.title = "Login - Portal Masyarakat";
-    }, []);
+
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({ email: false, password: false });
   const [errorMessage, setErrorMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const setToken = useAuthStore((state) => state.setToken);    
-  
+  useEffect(() => {
+    document.title = "Login - Portal Masyarakat";
+  }, []);
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
