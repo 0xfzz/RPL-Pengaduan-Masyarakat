@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient } from "@/generated/prisma"; // Adjust the path if needed
+import { PrismaClient } from "@prisma/client"; // Adjust the path if needed
 import multer from "multer";
 import path from "path";
 import fs from "fs";

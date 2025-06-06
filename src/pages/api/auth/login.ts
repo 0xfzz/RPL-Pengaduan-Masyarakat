@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import Prisma from "@/generated/prisma"; // Adjust the path if needed
+import Prisma from "@prisma/client"; // Adjust the path if needed
 import bcrypt from "bcryptjs";
 import jwt from "@/utils/jwt"; // Adjust the path if needed
 

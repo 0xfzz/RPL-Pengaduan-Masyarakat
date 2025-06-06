@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { PrismaClient, RolePengguna } from "@/generated/prisma"; // Adjust the path if needed
+import { PrismaClient, RolePengguna } from "@prisma/client"; // Adjust the path if needed
 import { onlyFor } from "@/utils/onlyFor";
 
 const prisma = new PrismaClient();
