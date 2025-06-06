@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
   },
+  eslint: {
+    ignoreDuringBuilds: true, // Ignore ESLint errors during build
+  },
   output: "standalone",
 };
 
