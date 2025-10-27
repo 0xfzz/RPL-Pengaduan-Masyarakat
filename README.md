@@ -13,8 +13,8 @@
 
  Here is the screenshot of the web app:
 
-    ![Screenshot](./images/1.png)
-    ![Screenshot](./images/2.png)
+![Screenshot](./images/1.png)
+![Screenshot](./images/2.png)
 
  # Setup
  ```
